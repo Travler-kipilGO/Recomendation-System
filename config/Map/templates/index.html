@@ -1,0 +1,88 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>여행 시작하기</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+  <!-- <script src="http://code.jquery.com/jquery-latest.js"></script> -->
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+</head>
+
+<body>
+  <header>
+    <a href="#" class="logo">Travel <span>.</span></a>
+    <nav class="navbar">
+      <ul>
+        <li><a data-scroll="home" href="#home" class="active">홈</a></li>
+        <li><a data-scroll="search" href="#search">검색</a></li>
+        <li><a data-scroll="mypage" href="#mypage">마이페이지</a></li>
+      </ul>
+    </nav>
+    <div class="fas fa-bars"></div>
+  </header>
+
+  <section class="home" id="home">
+    <div class="video">
+      <video src="{% static 'img/Plane.mp4' %}" loop muted autoplay></video>
+    </div>
+    <div class="form-container">
+      <form method="POST" action="{% url 'n_map' %}">
+        {% csrf_token %}
+        <h1>여행 시작하기</h1>
+        <select id="loc" name="loc" aria-label="주소">
+          <option value="" selected="">가고싶은 지역</option>
+          <option value="1">서울</option>
+          <option value="2">인천</option>
+          <option value="3">대전</option>
+          <option value="4">대구</option>
+          <option value="5">광주</option>
+          <option value="6">부산</option>
+          <option value="7">울산</option>
+          <option value="8">세종</option>
+          <option value="31">경기도</option>
+          <option value="32">강원도</option>
+          <option value="33">충청북도</option>
+          <option value="34">충청남도</option>
+          <option value="35">경상북도</option>
+          <option value="36">경상남도</option>
+          <option value="37">전라북도</option>
+          <option value="38">전라남도</option>
+          <option value="39">제주도</option>
+        </select>
+
+        <input type="checkbox" name="theme" value="12">관광지
+        <input type="checkbox" name="theme" value="14">문화시설
+        <input type="checkbox" name="theme" value="15">축제공연행사
+        <input type="checkbox" name="theme" value="28">레포츠
+        <input type="checkbox" name="theme" value="32">숙박
+        <input type="checkbox" name="theme" value="38">쇼핑
+        <input type="checkbox" name="theme" value="39">음식점
+        <input type="submit" value="search">
+      </form>
+    </div>
+  </section>
+
+
+
+  <script>
+    $(document).ready(function () {
+        $("input[type='checkbox']").on("click", function () {
+          let count = $("input:checked[type='checkbox']").length;
+
+          if (count > 1) {
+            $(this).prop("checked", false);
+            alert("1개만 선택");
+          }
+        });
+      });
+  </script>
+  <!-- <script src="js/index.js"></script> -->
+</body>
+
+</html>

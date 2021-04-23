@@ -1,0 +1,247 @@
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap");
+
+* {
+  font-family: "Kalam", cursive;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  text-transform: capitalize;
+}
+
+html {
+  overflow-x: hidden;
+  font-size: 62.5%;
+}
+
+header {
+  width: 96%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.3);
+  padding: 0.3rem 2rem;
+  transition: 0.2s linear;
+  z-index: 1000;
+}
+
+.header-active {
+  top: 0;
+  width: 100%;
+  border-radius: 0;
+}
+
+header .logo {
+  color: #333;
+  font-size: 3rem;
+}
+
+header .logo span {
+  color: #0098a1;
+}
+
+header .navbar ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+}
+
+header .navbar ul li {
+  margin: 0 1rem;
+}
+
+header .navbar ul li a {
+  font-size: 2rem;
+  color: #333;
+  transition: 0.2s linear;
+}
+
+header .navbar ul li .active,
+header .navbar ul li a:hover {
+  color: #0098a1;
+}
+
+header .fa-bars {
+  font-size: 3rem;
+  color: #0098a1;
+  cursor: pointer;
+  display: none;
+}
+
+.home {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  padding: 2rem 10rem;
+}
+.home .video video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25%;
+  width: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.home .card-container {
+  margin-top: 15.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.home .card-container .card {
+  width: 30rem;
+  margin: 2rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  position: relative;
+}
+
+.home .card-container .card img {
+  height: 25rem;
+  width: 100%;
+  object-fit: cover;
+}
+
+.home .card-container .card .content {
+  padding-bottom: 2rem;
+  text-align: center;
+}
+.home .card-container .card .content .title {
+  color: #0098a1;
+  font-size: 3rem;
+}
+.home .card-container .card .content p {
+  color: #333;
+  font-size: 1.3rem;
+  padding: 1rem;
+}
+.home .card-container .card .content .stars i {
+  padding: 0 0.2rem;
+  font-size: 2rem;
+  color: gold;
+}
+.home .card-container .card .content .btn {
+  font-size: 1.7rem;
+  margin-top: 1.4rem;
+  height: 3.5rem;
+  width: 12rem;
+  border-radius: 0.5rem;
+  outline: none;
+  border: none;
+  background: #0098a1;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s linear;
+}
+.home .card-container .card .content .btn:hover {
+  background: none;
+  border: 0.2rem solid #0098a1;
+  color: #0098a1;
+}
+
+.home .card-container .card .discount {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: block;
+
+  height: 3.5rem;
+  width: 6rem;
+  background-color: #ff3300;
+  color: #fff;
+  line-height: 4rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+@media (max-width: 991px) {
+  .home {
+    flex-flow: column;
+    padding: 1.5rem;
+  }
+  .home .content {
+    text-align: center;
+  }
+  .home .content h1 {
+    font-size: 5.5rem;
+  }
+  .home .content p {
+    font-size: 1.8rem;
+    padding: 0;
+    border: none;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 55%;
+  }
+
+  header .fa-bars {
+    display: block;
+  }
+
+  header .navbar {
+    position: fixed;
+    /*top: 5.5rem;*/
+    top: -100rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: 0.2s linear;
+    opacity: 0;
+  }
+
+  header .navbar ul {
+    flex-flow: column;
+  }
+  header .navbar ul li {
+    margin: 1rem 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  header .navbar ul li a {
+    display: block;
+    font-size: 3rem;
+  }
+
+  header .nav-toggle {
+    top: 5.5rem;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 500px) {
+  .home .form-container {
+    width: 100%;
+  }
+  .home .form-container form {
+    width: 100%;
+    margin: 3rem 0;
+  }
+  .home .form-container form input[type="submit"] {
+    width: 100%;
+  }
+}
