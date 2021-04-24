@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    Update Profile
+{% endblock page_title %}
+
+{% block content %}
+<div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}} 
+        <button>Update</button>
+    </form>
+    {% if object.login_method == "email" %}
+        <div>
+            <a href="{% url 'users:password' %}">Change Password</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}

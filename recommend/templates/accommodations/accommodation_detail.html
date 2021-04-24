@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block page_title %}
+    {{accommodation.name}}
+{% endblock page_title %}
+
+{% block content %}
+
+<h4>{{accommodation.name}}</h4>
+    <form action="{% url 'reservations:create' %}">
+    {% for room in accommodation.rooms.all %}
+    <div>
+        <span>{{room.name}}</span>
+        <span>{{room.description}}</span>
+        <span>{{room.price}}</span>
+        <input type="checkbox">
+    </div>
+    {% endfor %}
+
+
+    {% for calendar in accommodation.get_calendars %}
+    <div>        
+        <span>{{calendar.get_month}} / {{calendar.year}}</span>
+        <div>
+            {% for day in calendar.day_names  %}
+                <span>{{day}}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {% for day in calendar.get_days  %}
+                {% if day.number != 0 %}
+                    {% if day.past %}
+                        <span>{{day}}</span>
+                    {% else %}
+                        {{day}}<input type='checkbox' value={{day}}> 
+                    {% endif %}
+                {% else %}
+                  <span></span>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+    <button>예약</button>
+    </form>
+
+    <div>
+        {% for review in accommodation.reviews.all  %}
+            <div>
+                <div>
+                    <div>
+                        <span>{{review.user.first_name}}</span>
+                        <span>{{review.created}}</span>
+                    </div>
+                </div>
+                <p>{{review.review}}</p>
+                <p>{{review.rating_average}}</p>
+            </div>
+        {% endfor %}    
+    </div>
+
+{% endblock %}

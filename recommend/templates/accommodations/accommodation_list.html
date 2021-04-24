@@ -1,0 +1,43 @@
+ 
+{% extends "base.html" %}
+{% block page_title %}
+    Home
+{% endblock page_title %}
+
+{% block content %}
+<div class="container">
+    <div>
+        {% for accommodation in accommodations  %}
+        <a href="{% url 'accommodations:detail' accommodation.pk %}">
+            <img src="{{accommodation.first_photo}}">
+            <div>
+                <div>
+                    <span>{{accommodation.city}}, {{accommodation.country.name}}</span>
+                </div>
+                <span>
+                    {{accommodation.total_rating}}
+                </span>
+            </div>
+            <span>{{accommodation.name}}</span>
+        </a>
+        {% endfor %}
+    </div>
+    <div>
+        {% if page_obj.has_previous %}
+        <a href="?page={{page_obj.previous_page_number}}" class="text-teal-500">
+            <i class="fas fa-arrow-left fa-lg"></i>
+        </a>
+        {% endif %}
+
+        <span>
+        Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+        </span>
+        
+        {% if page_obj.has_next  %}
+        <a href="?page={{page_obj.next_page_number}}" class="text-teal-500">
+            <i class="fas fa-arrow-right fa-lg"></i>
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

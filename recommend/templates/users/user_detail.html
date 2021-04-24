@@ -1,0 +1,40 @@
+  
+{% extends "base.html" %}
+
+{% block page_title %}
+    {{user_obj.first_name}}
+{% endblock page_title %}
+
+{% block content %}
+<div>
+    <div>
+        <div>
+            <h4>사용자 정보</h4>
+            <p>이름 : <span>{{user_obj.first_name}}</span></p>
+            {% if user == user_obj %}
+                <a href="{% url 'users:update' %}">Edit Profile</a>
+            {% endif %}
+        </div>
+
+        <div>
+            <h4>추천</h4>
+            {% for accommodation in recommends %}
+            <div>
+                <a href="{% url 'accommodations:detail' accommodation.pk %}">
+                    <img src='{{accommodation.main_img_src}}'>
+                </a>
+                <p>{{accommodation.name}}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div>
+            <h4>리뷰</h4>
+            {% for review in reviews %}
+                <a href="{% url 'accommodations:detail' review.accommodation.pk %}">
+                    <span>{{review.accommodation.name}}</span>{{review.review}} <span>{{review.rating_average}}</span></p>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
