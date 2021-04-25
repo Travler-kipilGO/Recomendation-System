@@ -1,0 +1,753 @@
+{% extends "base.html" %} 
+{% block page_title %} 
+Map
+{% endblock page_title %} 
+
+{% block content %}
+{% load static %}
+  <style>
+    #mapwrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category,
+    .category * {
+      margin: 0;
+      padding: 0;
+      color: #000;
+    }
+
+    .category {
+      position: absolute;
+      overflow: hidden;
+      top: 100px;
+      right: 10px;
+      border-radius: 5px;
+      width: 351px;
+      height: 70px;
+      z-index: 10;
+      border: 1px solid black;
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      font-size: 12px;
+      text-align: center;
+      background-color: #fff;
+    }
+
+    .category .menu_selected {
+      background: #FF5F4A;
+      color: #fff;
+      border-left: 1px solid #915B2F;
+      border-right: 1px solid #915B2F;
+      margin: 0 -1px;
+    }
+
+    .category li {
+      list-style: none;
+      float: left;
+      width: 50px;
+      height: 68px;
+      padding-top: 5px;
+      cursor: pointer;
+    }
+
+    .customoverlay {
+      position: relative;
+      bottom: 85px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      border-bottom: 2px solid #ddd;
+      float: left;
+    }
+
+    .customoverlay:nth-of-type(n) {
+      border: 0;
+      box-shadow: 0px 1px 2px #888;
+    }
+
+    .customoverlay a {
+      display: block;
+      text-decoration: none;
+      color: #000;
+      text-align: center;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      overflow: hidden;
+      background: #d95050;
+      background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;
+    }
+
+    .customoverlay .title {
+      display: block;
+      text-align: center;
+      background: #fff;
+      margin-right: 35px;
+      padding: 10px 15px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .customoverlay:after {
+      content: '';
+      position: absolute;
+      margin-left: -12px;
+      left: 50%;
+      bottom: -12px;
+      width: 22px;
+      height: 12px;
+      background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+    }
+  </style>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=28e76986d85ea1c811c0077d258e2cd5"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <section>
+    <div id="mapwrap">
+      <!-- 지도가 표시될 div -->
+      <div id="map" style="width:100%;height: 700px;"></div>
+      <!-- 지도 위에 표시될 마커 카테고리 -->
+      <div class="category">
+        <ul>
+          <li id="tourMenu" onclick="changeMarker('tour')">
+            <span class="material-icons" style="font-size:40px;">tour</span>
+            관광지
+          </li>
+          <li id="cultureMenu" onclick="changeMarker('culture')">
+            <span class="material-icons" style="font-size:40px;">museum</span>
+            문화시설
+          </li>
+          <li id="festivalMenu" onclick="changeMarker('festival')">
+            <span class="material-icons" style="font-size:40px;">theater_comedy</span>
+            축제공연행사
+          </li>
+          <li id="leportsMenu" onclick="changeMarker('leports')">
+            <span class="material-icons" style="font-size:40px;">sports_handball</span>
+            레포츠
+          </li>
+          <li id="stayMenu" onclick="changeMarker('stay')">
+            <span class="material-icons" style="font-size:40px;">bedroom_parent</span>
+            숙박
+          </li>
+          <li id="shoppingMenu" onclick="changeMarker('shopping')">
+            <span class="material-icons" style="font-size:40px;">card_giftcard</span>
+            쇼핑
+          </li>
+          <li id="restaurantMenu" onclick="changeMarker('restaurant')">
+            <span class="material-icons" style="font-size:40px;">restaurant</span>
+            음식점
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+  <section>
+
+    <h1><a href="{% url 'travels:home' %}">뒤로</a></h1>
+  </section>
+  <script>
+    var context = JSON.parse('{{ context | escapejs }}');
+   
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
+      mapOption = {
+        // center: new kakao.maps.LatLng(37.498004414546934, 127.02770621963765), // 지도의 중심좌표 
+        center: new kakao.maps.LatLng(context.areacode[0], context.areacode[1]), // 지도의 중심좌표 
+        level: 8 // 지도의 확대 레벨 
+      };
+
+    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+
+    // 관광지 마커가 표시될 좌표 배열입니다
+    var tourPositions = [];
+    for (i of [...Array(context.tour_context.title.length).keys()]) {
+      // console.log(context.mapy[i], context.mapx[i])
+      var y = context.tour_context.mapy[i];
+      var x = context.tour_context.mapx[i];
+      tourPositions.push(new kakao.maps.LatLng(y, x))
+    }
+
+    // 문화시설 마커가 표시될 좌표 배열입니다
+    var culturePositions = [];
+    for (i of [...Array(context.culture_context.title.length).keys()]) {
+      // console.log(context.mapy[i], context.mapx[i])
+      var y = context.culture_context.mapy[i];
+      var x = context.culture_context.mapx[i];
+      culturePositions.push(new kakao.maps.LatLng(y, x))
+    }
+
+    // 축제공연 마커가 표시될 좌표 배열입니다
+    var festivalPositions = [];
+    for (i of [...Array(context.festival_context.title.length).keys()]) {
+      // console.log(context.mapy[i], context.mapx[i])
+      var y = context.festival_context.mapy[i];
+      var x = context.festival_context.mapx[i];
+      festivalPositions.push(new kakao.maps.LatLng(y, x))
+    }
+
+    // 레포츠 마커가 표시될 좌표 배열입니다
+    var leportsPositions = [];
+    for (i of [...Array(context.leports_context.title.length).keys()]) {
+      // console.log(context.mapy[i], context.mapx[i])
+      var y = context.leports_context.mapy[i];
+      var x = context.leports_context.mapx[i];
+      leportsPositions.push(new kakao.maps.LatLng(y, x))
+    }
+
+    // 숙박 마커가 표시될 좌표 배열입니다
+    var stayPositions = [];
+    for (i of [...Array(context.stay_context.title.length).keys()]) {
+      var y = context.stay_context.mapy[i];
+      var x = context.stay_context.mapx[i];
+      stayPositions.push(new kakao.maps.LatLng(y, x))
+    }
+
+    // 쇼핑 마커가 표시될 좌표 배열입니다
+    var shoppingPositions = [];
+    for (i of [...Array(context.shopping_context.title.length).keys()]) {
+      var y = context.shopping_context.mapy[i];
+      var x = context.shopping_context.mapx[i];
+      shoppingPositions.push(new kakao.maps.LatLng(y, x))
+    }
+
+    // 음식점 마커가 표시될 좌표 배열입니다
+    var restaurantPositions = [];
+    for (i of [...Array(context.restaurant_context.title.length).keys()]) {
+      var y = context.restaurant_context.mapy[i];
+      var x = context.restaurant_context.mapx[i];
+      restaurantPositions.push(new kakao.maps.LatLng(y, x))
+    }
+
+
+    // var imgUrl = "{% static 'img/outline_tour_black_36dp.png' %}";
+    // console.log(`[*] 이미지 주소: ${imgUrl}`);
+    var tourmarkerImageSrc = "{% static 'img/outline_tour_black_36dp.png' %}";
+    var culturemarkerImageSrc = "{% static 'img/outline_museum_black_36dp.png' %}";
+    var festivalmarkerImageSrc = "{% static 'img/outline_theater_comedy_black_36dp.png' %}";
+    var leportsmarkerImageSrc = "{% static 'img/outline_sports_handball_black_36dp.png' %}";
+    var staymarkerImageSrc = "{% static 'img/outline_bedroom_parent_black_36dp.png' %}";
+    var shoppingmarkerImageSrc = "{% static 'img/outline_card_giftcard_black_36dp.png' %}";
+    var restaurantmarkerImageSrc = "{% static 'img/outline_restaurant_black_36dp.png' %}";
+
+    // var markerImageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/category.png';  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
+    var tourMarkers = []; // 관광지 마커 객체를 가지고 있을 배열입니다
+    tourOverlay = [], // 관광지 오버레이
+      cultureMarkers = [], // 문화시설 마커 객체를 가지고 있을 배열입니다
+      cultureOverlay = [], // 문화시설 오버레이
+      festivalMarkers = [], // 축제공연 마커 객체를 가지고 있을 배열입니다
+      festivalOverlay = [], // 축제공연 오버레이
+      leportsMarkers = [], // 레포츠 마커 객체를 가지고 있을 배열입니다
+      leportsOverlay = [], // 레포츠 오버레이
+      stayMarkers = [], // 숙박 마커 객체를 가지고 있을 배열입니다
+      stayOverlay = [], // 숙박 오버레이
+      shoppingMarkers = [], // 쇼핑 마커 객체를 가지고 있을 배열입니다
+      shoppingOverlay = [], // 쇼핑 오버레이
+      restaurantMarkers = [], // 음식점 마커 객체를 가지고 있을 배열입니다
+      restaurantOverlay = []; // 음식점 오버레이
+
+
+    createTourMarkers(); // 관광지 마커를 생성하고 관광지 마커 배열에 추가합니다
+    createCultureMarkers(); // 문화시설 마커를 생성하고 문화시설 마커 배열에 추가합니다
+    createFestivalMarkers(); // 축제공연 마커를 생성하고 축제공연 마커 배열에 추가합니다
+    createLeportsMarkers(); // 레포츠 마커를 생성하고 레포츠 마커를 배열에 추가합니다.
+    createStayMarkers(); // 숙박 마커를 생성하고 숙박 마커를 배열에 추가합니다.
+    createShoppingMarkers(); // 쇼핑 마커를 생성하고 쇼핑 마커를 배열에 추가합니다.
+    createRestaurantMarkers(); // 음식점 마커를 생성하고 음식점 마커를 배열에 추가합니다.
+
+    changeMarker(context.content_type); // 지도에 관광지 마커가 보이도록 설정합니다
+    // changeMarker('context.theme'); // 지도에 관광지 마커가 보이도록 설정합니다    
+
+
+    // 마커이미지의 주소와, 크기, 옵션으로 마커 이미지를 생성하여 리턴하는 함수입니다
+    function createMarkerImage(src, size, options) {
+      var markerImage = new kakao.maps.MarkerImage(src, size, options);
+      return markerImage;
+    }
+
+    // 좌표와 마커이미지를 받아 마커를 생성하여 리턴하는 함수입니다
+    function createMarker(position, image) {
+      var marker = new kakao.maps.Marker({
+        position: position,
+        image: image
+      });
+
+      return marker;
+    }
+
+    // 관광지 마커를 생성하고 관광지 마커 배열에 추가하는 함수입니다
+    function createTourMarkers() {
+
+      for (var i = 0; i < tourPositions.length; i++) {
+
+        // var imageSize = new kakao.maps.Size(22, 26),
+        var imageSize = new kakao.maps.Size(50, 60),
+          imageOptions = {
+            spriteOrigin: new kakao.maps.Point(10, 0),
+            spriteSize: new kakao.maps.Size(36, 98)
+          };
+
+        // 마커이미지와 마커를 생성합니다
+        // var markerImage = createMarkerImage(coffeemarkerImageSrc, imageSize, imageOptions),
+        var markerImage = createMarkerImage(tourmarkerImageSrc, imageSize),
+          marker = createMarker(tourPositions[i], markerImage);
+
+        // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+        var content = '<div class="customoverlay">' +
+          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
+          //'    <span class="title">title</span>' +
+          '    <span class="title">context.tour_context.title[i]</span>' +
+          '  </a>' +
+          '</div>';
+
+        // 커스텀 오버레이를 생성합니다
+        var customOverlay = new kakao.maps.CustomOverlay({
+          map: map,
+          position: tourPositions[i],
+          content: content,
+          yAnchor: 0.5
+        });
+
+        // 생성된 마커를 관광지 마커 배열에 추가합니다
+        tourMarkers.push(marker);
+        tourOverlay.push(customOverlay);
+      }
+    }
+
+    // 관광지 마커들의 지도 표시 여부를 설정하는 함수입니다
+    function setTourMarkers(map) {
+      for (var i = 0; i < tourMarkers.length; i++) {
+        tourMarkers[i].setMap(map);
+        tourOverlay[i].setMap(map);
+      }
+    }
+
+    // 문화시설 마커를 생성하고 문화시설 마커 배열에 추가하는 함수입니다
+    function createCultureMarkers() {
+
+      for (var i = 0; i < culturePositions.length; i++) {
+
+        var imageSize = new kakao.maps.Size(50, 60),
+          imageOptions = {
+            spriteOrigin: new kakao.maps.Point(10, 36),
+            spriteSize: new kakao.maps.Size(36, 98)
+          };
+
+        // 마커이미지와 마커를 생성합니다
+        var markerImage = createMarkerImage(culturemarkerImageSrc, imageSize),
+          marker = createMarker(culturePositions[i], markerImage);
+
+        // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+        var content = '<div class="customoverlay">' +
+          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
+          '    <span class="title">title</span>' +
+          '  </a>' +
+          '</div>';
+
+        // 커스텀 오버레이를 생성합니다
+        var customOverlay = new kakao.maps.CustomOverlay({
+          map: map,
+          position: culturePositions[i],
+          content: content,
+          yAnchor: 0.5
+        });
+
+        // 생성된 마커를 문화시설 마커 배열에 추가합니다
+        cultureMarkers.push(marker);
+        cultureOverlay.push(customOverlay);
+      }
+    }
+
+    // 문화시설 마커들의 지도 표시 여부를 설정하는 함수입니다
+    function setCultureMarkers(map) {
+      for (var i = 0; i < cultureMarkers.length; i++) {
+        cultureMarkers[i].setMap(map);
+        cultureOverlay[i].setMap(map);
+      }
+    }
+
+    // 축제공연 마커를 생성하고 축제공연 마커 배열에 추가하는 함수입니다
+    function createFestivalMarkers() {
+
+      for (var i = 0; i < festivalPositions.length; i++) {
+
+        var imageSize = new kakao.maps.Size(50, 60),
+          imageOptions = {
+            spriteOrigin: new kakao.maps.Point(10, 72),
+            spriteSize: new kakao.maps.Size(36, 98)
+          };
+
+        // 마커이미지와 마커를 생성합니다
+        var markerImage = createMarkerImage(festivalmarkerImageSrc, imageSize),
+          marker = createMarker(festivalPositions[i], markerImage);
+
+        // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+        var content = '<div class="customoverlay">' +
+          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
+          '    <span class="title">title</span>' +
+          '  </a>' +
+          '</div>';
+
+        // 커스텀 오버레이를 생성합니다
+        var customOverlay = new kakao.maps.CustomOverlay({
+          map: map,
+          position: festivalPositions[i],
+          content: content,
+          yAnchor: 0.5
+        });
+
+        // 생성된 마커를 축제공연 마커 배열에 추가합니다
+        festivalMarkers.push(marker);
+        festivalOverlay.push(customOverlay);
+      }
+    }
+
+    // 축제공연 마커들의 지도 표시 여부를 설정하는 함수입니다
+    function setFestivalMarkers(map) {
+      for (var i = 0; i < festivalMarkers.length; i++) {
+        festivalMarkers[i].setMap(map);
+        festivalOverlay[i].setMap(map);
+      }
+    }
+
+    // 레포츠 마커를 생성하고 레포츠 마커 배열에 추가하는 함수입니다
+    function createLeportsMarkers() {
+
+      for (var i = 0; i < leportsPositions.length; i++) {
+
+        var imageSize = new kakao.maps.Size(50, 60),
+          imageOptions = {
+            spriteOrigin: new kakao.maps.Point(10, 0),
+            spriteSize: new kakao.maps.Size(36, 98)
+          };
+
+        // 마커이미지와 마커를 생성합니다
+        var markerImage = createMarkerImage(leportsmarkerImageSrc, imageSize),
+          marker = createMarker(leportsPositions[i], markerImage);
+
+        // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+        var content = '<div class="customoverlay">' +
+          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
+          '    <span class="title">title</span>' +
+          '  </a>' +
+          '</div>';
+
+        // 커스텀 오버레이를 생성합니다
+        var customOverlay = new kakao.maps.CustomOverlay({
+          map: map,
+          position: leportsPositions[i],
+          content: content,
+          yAnchor: 0.5
+        });
+
+        // 생성된 마커를 레포츠 마커 배열에 추가합니다
+        leportsMarkers.push(marker);
+        leportsOverlay.push(customOverlay);
+      }
+    }
+
+    // 레포츠 마커들의 지도 표시 여부를 설정하는 함수입니다
+    function setLeportsMarkers(map) {
+      for (var i = 0; i < leportsMarkers.length; i++) {
+        leportsMarkers[i].setMap(map);
+        leportsOverlay[i].setMap(map);
+      }
+    }
+
+    // 숙박 마커를 생성하고 숙박 마커 배열에 추가하는 함수입니다
+    function createStayMarkers() {
+
+      for (var i = 0; i < stayPositions.length; i++) {
+
+        var imageSize = new kakao.maps.Size(50, 60),
+          imageOptions = {
+            spriteOrigin: new kakao.maps.Point(10, 0),
+            spriteSize: new kakao.maps.Size(36, 98)
+          };
+
+        // 마커이미지와 마커를 생성합니다
+        var markerImage = createMarkerImage(staymarkerImageSrc, imageSize),
+          marker = createMarker(stayPositions[i], markerImage);
+
+        // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+        var content = '<div class="customoverlay">' +
+          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
+          '    <span class="title">title</span>' +
+          '  </a>' +
+          '</div>';
+
+        // 커스텀 오버레이를 생성합니다
+        var customOverlay = new kakao.maps.CustomOverlay({
+          map: map,
+          position: stayPositions[i],
+          content: content,
+          yAnchor: 0.5
+        });
+
+        // 생성된 마커를 숙박 마커 배열에 추가합니다
+        stayMarkers.push(marker);
+        stayOverlay.push(customOverlay);
+      }
+    }
+
+    // 숙박 마커들의 지도 표시 여부를 설정하는 함수입니다
+    function setStayMarkers(map) {
+      for (var i = 0; i < stayMarkers.length; i++) {
+        stayMarkers[i].setMap(map);
+        stayOverlay[i].setMap(map);
+      }
+    }
+
+    // 쇼핑 마커를 생성하고 쇼핑 마커 배열에 추가하는 함수입니다
+    function createShoppingMarkers() {
+
+      for (var i = 0; i < shoppingPositions.length; i++) {
+
+        var imageSize = new kakao.maps.Size(50, 60),
+          imageOptions = {
+            spriteOrigin: new kakao.maps.Point(10, 0),
+            spriteSize: new kakao.maps.Size(36, 98)
+          };
+
+        // 마커이미지와 마커를 생성합니다
+        var markerImage = createMarkerImage(shoppingmarkerImageSrc, imageSize),
+          marker = createMarker(shoppingPositions[i], markerImage);
+
+        // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+        var content = '<div class="customoverlay">' +
+          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
+          '    <span class="title">title</span>' +
+          '  </a>' +
+          '</div>';
+
+        // 커스텀 오버레이를 생성합니다
+        var customOverlay = new kakao.maps.CustomOverlay({
+          map: map,
+          position: shoppingPositions[i],
+          content: content,
+          yAnchor: 0.5
+        });
+
+        // 생성된 마커를 쇼핑 마커 배열에 추가합니다
+        shoppingMarkers.push(marker);
+        shoppingOverlay.push(customOverlay);
+      }
+    }
+
+    // 쇼핑 마커들의 지도 표시 여부를 설정하는 함수입니다
+    function setShoppingMarkers(map) {
+      for (var i = 0; i < shoppingMarkers.length; i++) {
+        shoppingMarkers[i].setMap(map);
+        shoppingOverlay[i].setMap(map);
+      }
+    }
+
+    // 음식점 마커를 생성하고 음식점 마커 배열에 추가하는 함수입니다
+    function createRestaurantMarkers() {
+
+      for (var i = 0; i < restaurantPositions.length; i++) {
+
+        var imageSize = new kakao.maps.Size(50, 60),
+          imageOptions = {
+            spriteOrigin: new kakao.maps.Point(10, 0),
+            spriteSize: new kakao.maps.Size(36, 98)
+          };
+
+        // 마커이미지와 마커를 생성합니다
+        var markerImage = createMarkerImage(restaurantmarkerImageSrc, imageSize),
+          marker = createMarker(restaurantPositions[i], markerImage);
+
+        // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+        var content = '<div class="customoverlay">' +
+          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
+          '    <span class="title">title</span>' +
+          '  </a>' +
+          '</div>';
+
+        // 커스텀 오버레이를 생성합니다
+        var customOverlay = new kakao.maps.CustomOverlay({
+          map: map,
+          position: restaurantPositions[i],
+          content: content,
+          yAnchor: 0.5
+        });
+
+        // 생성된 마커를 음식점 마커 배열에 추가합니다
+        restaurantMarkers.push(marker);
+        restaurantOverlay.push(customOverlay);
+      }
+    }
+
+    // 음식점 마커들의 지도 표시 여부를 설정하는 함수입니다
+    function setRestaurantMarkers(map) {
+      for (var i = 0; i < restaurantMarkers.length; i++) {
+        restaurantMarkers[i].setMap(map);
+        restaurantOverlay[i].setMap(map);
+      }
+    }
+    // 카테고리를 클릭했을 때 type에 따라 카테고리의 스타일과 지도에 표시되는 마커를 변경합니다
+    function changeMarker(type) {
+
+      var tourMenu = document.getElementById('tourMenu');
+      var cultureMenu = document.getElementById('cultureMenu');
+      var festivalMenu = document.getElementById('festivalMenu');
+      var leportsMenu = document.getElementById('leportsMenu');
+      var stayMenu = document.getElementById('stayMenu');
+      var shoppingMenu = document.getElementById('shoppingMenu');
+      var restaurantMenu = document.getElementById('restaurantMenu');
+
+      // 관광지 카테고리가 클릭됐을 때
+      if (type === 'tour') {
+
+        // 관광지 카테고리를 선택된 스타일로 변경하고
+        tourMenu.className = 'menu_selected';
+
+        // 문화시설과 축제공연 카테고리는 선택되지 않은 스타일로 바꿉니다
+        cultureMenu.className = '';
+        festivalMenu.className = '';
+        leportsMenu.className = '';
+        stayMenu.className = '';
+        shoppingMenu.className = '';
+        restaurantMenu.className = '';
+
+        // 관광지 마커들만 지도에 표시하도록 설정합니다
+        setTourMarkers(map);
+        setCultureMarkers(null);
+        setFestivalMarkers(null);
+        setLeportsMarkers(null);
+        setStayMarkers(null);
+        setShoppingMarkers(null);
+        setRestaurantMarkers(null);
+
+      } else if (type === 'culture') { // 문화시설 카테고리가 클릭됐을 때
+
+        // 문화시설 카테고리를 선택된 스타일로 변경하고
+        tourMenu.className = '';
+        cultureMenu.className = 'menu_selected';
+        festivalMenu.className = '';
+        leportsMenu.className = '';
+        stayMenu.className = '';
+        shoppingMenu.className = '';
+        restaurantMenu.className = '';
+
+        // 문화시설 마커들만 지도에 표시하도록 설정합니다
+        setTourMarkers(null);
+        setCultureMarkers(map);
+        setFestivalMarkers(null);
+        setLeportsMarkers(null);
+        setStayMarkers(null);
+        setShoppingMarkers(null);
+        setRestaurantMarkers(null);
+
+      } else if (type === 'festival') { // 축제공연 카테고리가 클릭됐을 때
+
+        // 축제공연 카테고리를 선택된 스타일로 변경하고
+        tourMenu.className = '';
+        cultureMenu.className = '';
+        festivalMenu.className = 'menu_selected';
+        leportsMenu.className = '';
+        stayMenu.className = '';
+        shoppingMenu.className = '';
+        restaurantMenu.className = '';
+
+        // 축제공연 마커들만 지도에 표시하도록 설정합니다
+        setTourMarkers(null);
+        setCultureMarkers(null);
+        setFestivalMarkers(map);
+        setLeportsMarkers(null);
+        setStayMarkers(null);
+        setShoppingMarkers(null);
+        setRestaurantMarkers(null);
+
+      } else if (type === 'leports') { // 레포츠 카테고리가 클릭됐을 때
+
+        // 레포츠 카테고리를 선택된 스타일로 변경하고
+        tourMenu.className = '';
+        cultureMenu.className = '';
+        festivalMenu.className = '';
+        leportsMenu.className = 'menu_selected';
+        stayMenu.className = '';
+        shoppingMenu.className = '';
+        restaurantMenu.className = '';
+
+        // 레포츠 마커들만 지도에 표시하도록 설정합니다
+        setTourMarkers(null);
+        setCultureMarkers(null);
+        setFestivalMarkers(null);
+        setLeportsMarkers(map);
+        setStayMarkers(null);
+        setShoppingMarkers(null);
+        setRestaurantMarkers(null);
+
+      } else if (type === 'stay') { // 숙박 카테고리가 클릭됐을 때
+
+        // 숙박 카테고리를 선택된 스타일로 변경하고
+        tourMenu.className = '';
+        cultureMenu.className = '';
+        festivalMenu.className = '';
+        leportsMenu.className = '';
+        stayMenu.className = 'menu_selected';
+        shoppingMenu.className = '';
+        restaurantMenu.className = '';
+
+        // 숙박 마커들만 지도에 표시하도록 설정합니다
+        setTourMarkers(null);
+        setCultureMarkers(null);
+        setFestivalMarkers(null);
+        setLeportsMarkers(null);
+        setStayMarkers(map);
+        setShoppingMarkers(null);
+        setRestaurantMarkers(null);
+
+      } else if (type === 'shopping') { // 쇼핑 카테고리가 클릭됐을 때
+
+        // 쇼핑 카테고리를 선택된 스타일로 변경하고
+        tourMenu.className = '';
+        cultureMenu.className = '';
+        festivalMenu.className = '';
+        leportsMenu.className = '';
+        stayMenu.className = '';
+        shoppingMenu.className = 'menu_selected';
+        restaurantMenu.className = '';
+
+        // 쇼핑 마커들만 지도에 표시하도록 설정합니다
+        setTourMarkers(null);
+        setCultureMarkers(null);
+        setFestivalMarkers(null);
+        setLeportsMarkers(null);
+        setStayMarkers(null);
+        setShoppingMarkers(map);
+        setRestaurantMarkers(null);
+
+      } else if (type === 'restaurant') { // 음식점 카테고리가 클릭됐을 때
+
+        // 음식점 카테고리를 선택된 스타일로 변경하고
+        tourMenu.className = '';
+        cultureMenu.className = '';
+        festivalMenu.className = '';
+        leportsMenu.className = '';
+        stayMenu.className = '';
+        shoppingMenu.className = '';
+        restaurantMenu.className = 'menu_selected';
+
+        // 음식점 마커들만 지도에 표시하도록 설정합니다
+        setTourMarkers(null);
+        setCultureMarkers(null);
+        setFestivalMarkers(null);
+        setLeportsMarkers(null);
+        setStayMarkers(null);
+        setShoppingMarkers(null);
+        setRestaurantMarkers(map);
+      }
+    }
+
+
+    // 지도에 확대 축소 컨트롤을 생성한다
+    var zoomControl = new kakao.maps.ZoomControl();
+
+    // 지도의 우측 아래에 확대 축소 컨트롤을 추가한다
+    map.addControl(zoomControl, kakao.maps.ControlPosition.BOTTOMRIGHT);
+  </script>
+
+{% endblock content %}

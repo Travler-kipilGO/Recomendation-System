@@ -62,12 +62,12 @@ class UserProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
         user = models.User.objects.get(pk=self.kwargs['pk'])
-        #recommends = recommend.get_k_neighbors(user.username, 3)
-        #context['recommends'] = (
-        #    Accommodation.objects.get(name=recommends[0]),
-        #    Accommodation.objects.get(name=recommends[1]),
-        #    Accommodation.objects.get(name=recommends[2])
-        #)
+        recommends = recommend.get_k_neighbors(user.username, 3)
+        context['recommends'] = (
+            Accommodation.objects.get(name=recommends[0]),
+            Accommodation.objects.get(name=recommends[1]),
+            Accommodation.objects.get(name=recommends[2])
+        )
 
         friends = friend.main(user.username)
         #print(friends[0][1])
