@@ -1,4 +1,4 @@
-# from django.db import models
+from django.db import models
 
 # # Create your models here.
 # class Search(models.Model):
@@ -15,3 +15,25 @@
 #     def __str__(self):
 #         return self.user_id+", "+self.area_code+", "+self.tour_list
 
+class Tour_spot(models.Model):
+    areacode     = models.IntegerField()
+    cat1         = models.CharField(max_length=100)
+    cat2         = models.CharField(max_length=100)
+    content_id   = models.IntegerField()
+    content_type = models.IntegerField()
+    mapx         = models.FloatField()
+    mapy         = models.FloatField()
+    readcount    = models.IntegerField()
+    title        = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.cat1+", "+self.cat2+", "+self.title
+
+class Tour_spot_rating(models.Model):
+    user_id      = models.CharField(max_length=100)
+    content_id   = models.IntegerField()
+    rating       = models.FloatField()
+    content_type = models.IntegerField()
+    
+    def __str__(self):
+        return self.title

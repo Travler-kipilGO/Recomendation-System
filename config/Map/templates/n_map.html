@@ -163,20 +163,12 @@
 
 
   <section>
-    <!-- <div>
-      {{contentid}}<br>
-      {{mapx}}<br>
-      {{mapy}}<br> 
-      </div> -->
+
     <h1><a href="{% url 'index' %}">뒤로</a></h1>
   </section>
   <script>
-    // // 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
-    // var placeOverlay = new kakao.maps.CustomOverlay({zIndex:1}), 
-    //     contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다 
-    //     markers = [], // 마커를 담을 배열입니다
-    //     currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
-    // const mapy = "{{mapy}}".replace(/&#x27;/g, "").replace(/\[/g, "").replace(/\]/g, "").split(',');
+    var context = JSON.parse('{{ context | escapejs }}');
+    // const context = "{{context}}".replace(/&#x27;/g, "").replace(/\[/g, "").replace(/\]/g, "").split(',');
     // var mapy = "{{mapy}}";
     // var context = JSON.parse("{{context_json | escapejs}}")
     // console.log(JSON.stringify(context));
@@ -215,9 +207,9 @@
 
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
       mapOption = {
-        center: new kakao.maps.LatLng(37.498004414546934, 127.02770621963765), // 지도의 중심좌표 
-        // center: new kakao.maps.LatLng(context.loc[0], context.loc[1]), // 지도의 중심좌표 
-        level: 12 // 지도의 확대 레벨 
+        // center: new kakao.maps.LatLng(37.498004414546934, 127.02770621963765), // 지도의 중심좌표 
+        center: new kakao.maps.LatLng(context.areacode[0], context.areacode[1]), // 지도의 중심좌표 
+        level: 8 // 지도의 확대 레벨 
       };
 
     var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
@@ -225,7 +217,7 @@
 
     // 관광지 마커가 표시될 좌표 배열입니다
     var tourPositions = [];
-    for (i of [...Array(context.tour_context.contentid.length).keys()]) {
+    for (i of [...Array(context.tour_context.title.length).keys()]) {
       // console.log(context.mapy[i], context.mapx[i])
       var y = context.tour_context.mapy[i];
       var x = context.tour_context.mapx[i];
@@ -234,7 +226,7 @@
 
     // 문화시설 마커가 표시될 좌표 배열입니다
     var culturePositions = [];
-    for (i of [...Array(context.culture_context.contentid.length).keys()]) {
+    for (i of [...Array(context.culture_context.title.length).keys()]) {
       // console.log(context.mapy[i], context.mapx[i])
       var y = context.culture_context.mapy[i];
       var x = context.culture_context.mapx[i];
@@ -243,7 +235,7 @@
 
     // 축제공연 마커가 표시될 좌표 배열입니다
     var festivalPositions = [];
-    for (i of [...Array(context.festival_context.contentid.length).keys()]) {
+    for (i of [...Array(context.festival_context.title.length).keys()]) {
       // console.log(context.mapy[i], context.mapx[i])
       var y = context.festival_context.mapy[i];
       var x = context.festival_context.mapx[i];
@@ -252,7 +244,7 @@
 
     // 레포츠 마커가 표시될 좌표 배열입니다
     var leportsPositions = [];
-    for (i of [...Array(context.leports_context.contentid.length).keys()]) {
+    for (i of [...Array(context.leports_context.title.length).keys()]) {
       // console.log(context.mapy[i], context.mapx[i])
       var y = context.leports_context.mapy[i];
       var x = context.leports_context.mapx[i];
@@ -261,7 +253,7 @@
 
     // 숙박 마커가 표시될 좌표 배열입니다
     var stayPositions = [];
-    for (i of [...Array(context.stay_context.contentid.length).keys()]) {
+    for (i of [...Array(context.stay_context.title.length).keys()]) {
       var y = context.stay_context.mapy[i];
       var x = context.stay_context.mapx[i];
       stayPositions.push(new kakao.maps.LatLng(y, x))
@@ -269,7 +261,7 @@
 
     // 쇼핑 마커가 표시될 좌표 배열입니다
     var shoppingPositions = [];
-    for (i of [...Array(context.shopping_context.contentid.length).keys()]) {
+    for (i of [...Array(context.shopping_context.title.length).keys()]) {
       var y = context.shopping_context.mapy[i];
       var x = context.shopping_context.mapx[i];
       shoppingPositions.push(new kakao.maps.LatLng(y, x))
@@ -277,7 +269,7 @@
 
     // 음식점 마커가 표시될 좌표 배열입니다
     var restaurantPositions = [];
-    for (i of [...Array(context.restaurant_context.contentid.length).keys()]) {
+    for (i of [...Array(context.restaurant_context.title.length).keys()]) {
       var y = context.restaurant_context.mapy[i];
       var x = context.restaurant_context.mapx[i];
       restaurantPositions.push(new kakao.maps.LatLng(y, x))
@@ -319,7 +311,7 @@
     createShoppingMarkers(); // 쇼핑 마커를 생성하고 쇼핑 마커를 배열에 추가합니다.
     createRestaurantMarkers(); // 음식점 마커를 생성하고 음식점 마커를 배열에 추가합니다.
 
-    changeMarker('tour'); // 지도에 관광지 마커가 보이도록 설정합니다
+    changeMarker(context.content_type); // 지도에 관광지 마커가 보이도록 설정합니다
     // changeMarker('context.theme'); // 지도에 관광지 마커가 보이도록 설정합니다    
 
 
@@ -359,7 +351,8 @@
         // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
         var content = '<div class="customoverlay">' +
           '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
-          '    <span class="title">title</span>' +
+          //'    <span class="title">title</span>' +
+          '    <span class="title">context.tour_context.title[i]</span>' +
           '  </a>' +
           '</div>';
 
