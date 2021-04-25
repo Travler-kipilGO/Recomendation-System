@@ -5,8 +5,12 @@ Log In
 
 {% block content %} 
 <form method="post", action="{% url 'users:login' %}"> 
-    {% csrf_token %} 
+    {% csrf_token %}
+    <h3>로그인</h3> 
     {{form.as_p}} 
-    <button>Login</button> 
+    <div class="intro-button">
+        <button>로그인</button>
+        <a class="btn btn-primary" href="{% url 'users:signup' %}" >회원가입</a>
+    </div>
 </form> 
 {% endblock content %}

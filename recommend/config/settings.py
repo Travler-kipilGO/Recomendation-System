@@ -26,7 +26,7 @@ SECRET_KEY = 'a!mev42j2ax@16l#=2x5!z1e$g2+@x+$zwkg_csq$l&$t(rrp^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -153,4 +153,4 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
-
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

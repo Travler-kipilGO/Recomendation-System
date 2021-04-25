@@ -5,3 +5,7 @@ from . import models
 @admin.register(models.User) 
 class CustomUserAdmin(admin.ModelAdmin): 
     pass
+
+@admin.register(models.Survey)
+class SurveyAdmin(admin.ModelAdmin): 
+    pass

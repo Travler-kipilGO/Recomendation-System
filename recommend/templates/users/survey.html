@@ -1,0 +1,154 @@
+{% extends "base.html" %} 
+{% block page_title %} 
+성향 분석
+{% endblock page_title %} 
+
+{% block content %}
+<section id="survey">
+    <div class="wrapper">
+        <form id="form" action="{% url 'users:recommend' %}" method="post">
+            {% csrf_token %}
+
+            <div class="test">
+                    <div class="question_container">
+                        <h3 class="number">1/4</h3>
+                        <h3 class="question">ID를 적어주세요.</h3>
+                    </div>
+                <div class="answer">
+                    <div>
+                        ID: <input type="text" name="answer_0" id="course0-1"><br>
+                    </div>
+                </div>
+                <div class="btn_wrap">
+                    <button class="next_btn">다 음</button>
+                </div>
+            </div>
+
+
+
+
+            <div class="test">
+                <div class="question_container">
+                    <h3 class="number">2/4</h3>
+                    <h3 class="question">언제 여행을 떠나시나요?</h3>
+                </div>
+                <div class="answer">
+                    <div>
+                        <input id="course1_1" type="radio" name="answer_1" value="S01">
+                        <label for="course1_1">봄</label>
+                    </div>
+                    <div>
+                        <input id="course1_2" type="radio" name="answer_1" value="S02">
+                        <label for="course1_2">여름</label>
+                    </div>
+                    <div>
+                        <input id="course1_3" type="radio" name="answer_1" value="S03">
+                        <label for="course1_3">가을</label>
+                    </div>
+                    <div>
+                        <input id="course1_4" type="radio" name="answer_1" value="S04">
+                        <label for="course1_4">겨울</label>
+                    </div>
+                </div>
+                <div class="btn_wrap btn_sort">
+                    <button class="prev_btn">이 전</button>
+                    <button class="next_btn">다 음</button>
+                </div>
+            </div>
+
+
+
+                <div class="test">
+                    <div class="question_container">
+                        <h3 class="number">3/4</h3>
+                        <h3 class="question">누구와 함께하는 여행인가요?</h3>
+                    </div>
+                <div class="answer">
+                    <div>
+                        <input id="course2-1" type="radio" name="answer_2" value="W01">
+                        <label for="course2-1">혼자</label>
+                    </div>
+                    <div>
+                        <input id="course2-2" type="radio" name="answer_2" value="W02">
+                        <label for="course2-2">가족</label>
+                    </div>
+                    <div>
+                        <input id="course2-3" type="radio" name="answer_2" value="W03">
+                        <label for="course2-3">친구</label>
+                    </div>
+                    <div>
+                        <input id="course2-4" type="radio" name="answer_2" value="W04">
+                        <label for="course2-4">연인</label>
+                    </div>
+                </div>
+                <div class="btn_wrap btn_sort">
+                    <button class="prev_btn">이 전</button>
+                    <button class="next_btn">다 음</button>
+                </div>
+            </div>
+
+
+
+                <div class="test">
+                <div class="question_container">
+                    <h3 class="number">4/4</h3>
+                    <h3 class="question">관심있는 테마와 여행하고 싶은 곳이 있으신가요?(5개선택)</h3>
+                </div>
+                <div class="answer">
+                    <div>
+                        <input id="course3_1" type="checkbox" name="answer[]" value="A0101">
+                        <label for="course3_1">자연관광지</label>
+                    </div>
+                    <div>
+                        <input id="course3_2" type="checkbox" name="answer[]" value="A0201">
+                        <label for="course3_2">역사관광지</label>
+                    </div>
+                    <div>
+                        <input id="course3_3" type="checkbox" name="answer[]" value="A0202">
+                        <label for="course3_3">휴양관광지</label>
+                    </div>
+                    <div>
+                        <input id="course3_4" type="checkbox" name="answer[]" value="A0203">
+                        <label for="course3_4">체험관광지</label>
+                    </div>
+                    <div>
+                        <input id="course3_5" type="checkbox" name="answer[]" value="A0206">
+                        <label for="course3_5">문화시설</label>
+                    </div>
+                    <div>
+                        <input id="course3_6" type="checkbox" name="answer[]" value="A0207">
+                        <label for="course3_6">축제</label>
+                    </div>
+                    <div>
+                        <input id="course3_7" type="checkbox" name="answer[]" value="A0208">
+                        <label for="course3_7">공연/행사</label>
+                    </div>
+                    <div>
+                        <input id="course3_8" type="checkbox" name="answer[]" value="A0302">
+                        <label for="course3_8">레포츠</label>
+                    </div>
+                    <div>
+                        <input id="course3_9" type="checkbox" name="answer[]" value="A0401">
+                        <label for="course3_9">쇼핑</label>
+                    </div>
+                    <div>
+                        <input id="course3_10" type="checkbox" name="answer[]" value="A0502">
+                        <label for="course3_10">맛집</label>
+                    </div>
+                    <div>
+                        <input id="course3_11" type="checkbox" name="answer[]" value="B0201">
+                        <label for="course3_11">숙박</label>
+                    </div>
+                </div>
+                <div class="btn_wrap btn_sort">
+                    <button class="prev_btn">이 전</button>
+                    <input type="submit" value="제 출" class="submit_btn" id="submit_btn">
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% load static %}
+<script type="text/javascript" src="{% static 'js/survey.js' %}"></script>
+
+{% endblock content %}

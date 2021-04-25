@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django_seed import Seed
 from users.models import User
+import random
 
 class Command(BaseCommand):
 
@@ -14,6 +15,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         number = options.get("number")
         seeder = Seed.seeder()
-        seeder.add_entity(User, number, {"is_staff": False, "is_superuser": False})
+        sex = ['남', '여']
+        address = ['서울', '부산']
+        seeder.add_entity(User, number, {
+            "username" : lambda x : seeder.faker.email(),
+            "is_staff": False, 
+            "is_superuser": False,       
+        })
         seeder.execute()
         self.stdout.write(self.style.SUCCESS(f"{number} users created!"))

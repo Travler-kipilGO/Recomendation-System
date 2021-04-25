@@ -1,10 +1,12 @@
 from django.views.generic import FormView, DetailView, UpdateView
+from django.views import View
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, reverse 
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.views import PasswordChangeView
 from . import forms, models
 import core.recommend as recommend
+import core.friend as friend
 from accommodations.models import Accommodation
 from reviews.models import Review
 
@@ -17,7 +19,6 @@ from django.urls import reverse_lazy
 class LoginView(FormView): 
     template_name = "users/login.html" 
     form_class = forms.LoginForm 
-    initial = {"email":"sample@sample.com"}
 
     def form_valid(self, form): 
         email = form.cleaned_data.get("email") 
@@ -43,7 +44,7 @@ def log_out(request):
 class SignupView(FormView):
     template_name = "users/signup.html" 
     form_class = forms.SignUpForm 
-    success_url = reverse_lazy("core:home")
+    success_url = reverse_lazy("users:survey")
 
     def form_valid(self, form): 
         form.save() 
@@ -61,12 +62,16 @@ class UserProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
         user = models.User.objects.get(pk=self.kwargs['pk'])
-        recommends = recommend.get_k_neighbors(user.username, 3)
-        context['recommends'] = (
-            Accommodation.objects.get(name=recommends[0]),
-            Accommodation.objects.get(name=recommends[1]),
-            Accommodation.objects.get(name=recommends[2])
-        )
+        #recommends = recommend.get_k_neighbors(user.username, 3)
+        #context['recommends'] = (
+        #    Accommodation.objects.get(name=recommends[0]),
+        #    Accommodation.objects.get(name=recommends[1]),
+        #    Accommodation.objects.get(name=recommends[2])
+        #)
+
+        friends = friend.main(user.username)
+        #print(friends[0][1])
+        context['friends'] = friends
         context['reviews'] = Review.objects.filter(user=user)
         return context
 
@@ -102,3 +107,31 @@ class UpdatePasswordView(PasswordChangeView):
         
     def get_success_url(self):
         return self.request.user.get_absolute_url()
+
+
+class SurveyView(View):
+    def get(self, request):
+        return render(request, 'users/survey.html')
+
+    def post(self,request):
+        return render(request, 'users/recommend.html')
+
+def recommend(request) :
+    print('request recommend ~')
+
+    id2 = request.POST['answer_0']
+    theme = request.POST.getlist('answer[]')
+    print('param ', id2, theme)
+
+    #surveys = Survey(theme=theme, Mail=id2)
+    #surveys.save()
+
+    return render(request, 'users/recommend.html')
+
+def search(request) :
+    return render(request, 'users/search.html')
+
+def data(request) :
+    print('request data')
+    surveys = Survey.objects.all()
+    return render(request, 'mypage.html', {'surveys' : surveys})

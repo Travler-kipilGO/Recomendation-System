@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Travel</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href=" {% static 'css/search.css' %} " />
+  </head>
+  <body>
+    <header>
+      <a href="#" class="logo">travel <span>.</span></a>
+      <nav class="navbar">
+        <ul>
+          <li><a data-scroll="home" href="#home" class="active">홈</a></li>
+          <li><a data-scroll="search" href="../search">검색</a></li>
+          <li><a data-scroll="mypage" href="../mypage">마이페이지</a></li>
+        </ul>
+      </nav>
+      <div class="fas fa-bars"></div>
+    </header>
+
+    <section class="home" id="home">
+      <div class="video">
+        <video src="{% static 'img/video.mp4' %}" loop muted autoplay></video>
+      </div>
+      <div class="content">
+        <h1>여행 검색</h1>
+        <p>검색</p>
+      </div>
+      <div class="form-container">
+        <form action="">
+          <h3>검색</h3>
+          <span>location</span>
+          <input type="text" placeholder="방문 장소" />
+          <span>인원</span>
+          <input type="number" placeholder="인원" />
+          <span>출발일</span>
+          <input type="date" />
+          <span>종료일</span>
+          <input type="date" />
+          <input type="submit" value="검색" />
+        </form>
+      </div>
+    </section>
+    <script src=" {% static 'js/index.js' %} "></script>
+  </body>
+</html>

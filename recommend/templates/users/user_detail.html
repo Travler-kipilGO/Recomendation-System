@@ -16,6 +16,15 @@
             {% endif %}
         </div>
 
+        <section>
+            <div>
+                <h3>친구추천</h3>
+                {% for friend in friends %}
+                    <p>{{friend.1}}</p>
+                {% endfor %}
+            </div>
+        </section>
+        
         <div>
             <h4>추천</h4>
             {% for accommodation in recommends %}

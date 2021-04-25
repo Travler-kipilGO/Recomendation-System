@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Travel</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/recommend.css' %}" />
+  </head>
+  <body>
+    <header>
+      <a href="#" class="logo">travel <span>.</span></a>
+      <nav class="navbar">
+        <ul>
+          <li><a data-scroll="home" href="#home" class="active">홈</a></li>
+          <li><a data-scroll="search" href="../search">검색</a></li>
+          <li><a data-scroll="mypage" href="../mypage">마이페이지</a></li>
+        </ul>
+      </nav>
+      <div class="fas fa-bars"></div>
+    </header>
+
+    <section class="home" id="home">
+      <div class="video">
+        <video src=" {% static 'img/tree.mp4' %}" loop muted autoplay></video>
+      </div>
+
+      <div class="card-container">
+        <div class="card">
+          <span class="discount">-35%</span>
+          <img src=" {% static 'img/seoul.jpg' %}" alt="" />
+          <div class="content">
+            <h3 class="title">seoul</h3>
+            <p>서울입니다</p>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <a href="#"><button class="btn">check</button></a>
+          </div>
+        </div>
+        <div class="card">
+          <span class="discount">-35%</span>
+          <img src="{% static 'img/seoul.jpg' %}" alt="" />
+          <div class="content">
+            <h3 class="title">seoul</h3>
+            <p>서울입니다</p>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <a href="#"><button class="btn">check</button></a>
+          </div>
+        </div>
+        <div class="card">
+          <span class="discount">-35%</span>
+          <img src="{% static 'img/seoul.jpg' %}" alt="" />
+          <div class="content">
+            <h3 class="title">seoul</h3>
+            <p>서울입니다</p>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <a href="#"><button class="btn">check</button></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="js/index.js"></script>
+  </body>
+</html>
