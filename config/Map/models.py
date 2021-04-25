@@ -31,9 +31,11 @@ class Tour_spot(models.Model):
 
 class Tour_spot_rating(models.Model):
     user_id      = models.CharField(max_length=100)
-    content_id   = models.IntegerField()
-    rating       = models.FloatField()
-    content_type = models.IntegerField()
+    content_id   = models.CharField(max_length=100)
+    rating       = models.CharField(max_length=100)
+    content_type = models.CharField(max_length=100)
+    areacode     = models.CharField(max_length=100)
+    
     
     def __str__(self):
-        return self.title
+        return self.user_id+", "+self.content_id+", "+self.rating+", "+self.content_type+", "+self.areacode

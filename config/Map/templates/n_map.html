@@ -167,8 +167,8 @@
     <h1><a href="{% url 'index' %}">뒤로</a></h1>
   </section>
   <script>
+    // var context = "{{context}}".replace(/&#x27;/g, "").replace(/\[/g, "").replace(/\]/g, "").split(',');
     var context = JSON.parse('{{ context | escapejs }}');
-    // const context = "{{context}}".replace(/&#x27;/g, "").replace(/\[/g, "").replace(/\]/g, "").split(',');
     // var mapy = "{{mapy}}";
     // var context = JSON.parse("{{context_json | escapejs}}")
     // console.log(JSON.stringify(context));
@@ -352,7 +352,7 @@
         var content = '<div class="customoverlay">' +
           '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
           //'    <span class="title">title</span>' +
-          '    <span class="title">context.tour_context.title[i]</span>' +
+          '    <span class="title">{{context.tour_context.title}}</span>' +
           '  </a>' +
           '</div>';
 

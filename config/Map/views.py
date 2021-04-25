@@ -120,6 +120,7 @@ def n_map(request):
     # stay_context       = reco_data(32, areacode)
     # shopping_context   = reco_data(38, areacode)
     # restaurant_context = reco_data(39, areacode)
+    # print(tour_context)
 
 
     context = {}
@@ -131,7 +132,7 @@ def n_map(request):
     context['shopping_context']   = shopping_context
     context['restaurant_context'] = restaurant_context
     context['areacode']           = map_center
-    context['content_type']      = theme_marker
+    context['content_type']       = theme_marker
     # print(context['content_type'])
 
     context_json = json.dumps(context)
@@ -181,14 +182,20 @@ def search_data(c_type, loc):
 def reco_data(c_type, loc):
     # 여행지 불러오기
     data   = Tour_spot.objects.all()
+    data   = pd.DataFrame(Tour_spot.objects.all().values())
     # 여행지 평가 불러오기
     data_r = Tour_spot_rating.objects.filter(content_type=c_type, areacode=loc)
+    data_r = pd.DataFrame(Tour_spot_rating.objects.filter(content_type=c_type, areacode=loc).values())
+    data_r[['content_id', 'content_type', 'areacode']] = data_r[['content_id', 'content_type', 'areacode']].astype(int)
+    data_r['rating'] = data_r['rating'].astype(float)
 
     # 현재 로그인 된 유저 아이디 받기
+    user = 'geyav@google.com'
     # user = User.objects.----
 
     # 메트릭스 만들기
-    matrix = data_r.pivot_table(index='user_id', columns='content_id')['rating']
+    # matrix.columns = matrix.columns.str.strip("'")
+    matrix = pd.pivot_table(data_r, index="user_id", columns="content_id", values='rating')
     matrix.fillna(-1, inplace=True)
     
     # 추천 받기
@@ -202,9 +209,9 @@ def reco_data(c_type, loc):
     x_li = []
     y_li = []
     for i in range(len(reco_li)) :
-        t_li.append(datas[ datas['title']== reco_li[i][1]].title.values[0])
-        x_li.append(datas[ datas['title']== reco_li[i][1]].mapx.values[0])
-        y_li.append(datas[ datas['title']== reco_li[i][1]].mapy.values[0])
+        t_li.append(data[ data['title']== reco_li[i][1]].title.values[0])
+        x_li.append(data[ data['title']== reco_li[i][1]].mapx.values[0])
+        y_li.append(data[ data['title']== reco_li[i][1]].mapy.values[0])
     
     # 추천 결과
     context = {}
