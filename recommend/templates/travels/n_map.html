@@ -148,6 +148,8 @@ Map
     <h1><a href="{% url 'travels:home' %}">뒤로</a></h1>
   </section>
   <script>
+    //var context = "{{context}}".replace(/&#x27;/g, "").replace(/\[/g, "").replace(/\]/g, "").split(',');
+
     var context = JSON.parse('{{ context | escapejs }}');
    
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
@@ -294,12 +296,11 @@ Map
           marker = createMarker(tourPositions[i], markerImage);
 
         // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        var content = '<div class="customoverlay">' +
-          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
-          //'    <span class="title">title</span>' +
-          '    <span class="title">context.tour_context.title[i]</span>' +
-          '  </a>' +
-          '</div>';
+        var content = `<div class="customoverlay">
+           <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">
+              <span class="title">${context.tour_context.title[i]}</span>
+            </a>
+          </div>`;
 
         // 커스텀 오버레이를 생성합니다
         var customOverlay = new kakao.maps.CustomOverlay({
@@ -339,12 +340,12 @@ Map
           marker = createMarker(culturePositions[i], markerImage);
 
         // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        var content = '<div class="customoverlay">' +
-          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
-          '    <span class="title">title</span>' +
-          '  </a>' +
-          '</div>';
-
+        var content = `<div class="customoverlay">
+           <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">
+              <span class="title">${context.tour_context.title[i]}</span>
+            </a>
+          </div>`; 
+        
         // 커스텀 오버레이를 생성합니다
         var customOverlay = new kakao.maps.CustomOverlay({
           map: map,
@@ -383,11 +384,11 @@ Map
           marker = createMarker(festivalPositions[i], markerImage);
 
         // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        var content = '<div class="customoverlay">' +
-          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
-          '    <span class="title">title</span>' +
-          '  </a>' +
-          '</div>';
+        var content = `<div class="customoverlay">
+           <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">
+              <span class="title">${context.tour_context.title[i]}</span>
+            </a>
+          </div>`;
 
         // 커스텀 오버레이를 생성합니다
         var customOverlay = new kakao.maps.CustomOverlay({
@@ -427,11 +428,11 @@ Map
           marker = createMarker(leportsPositions[i], markerImage);
 
         // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        var content = '<div class="customoverlay">' +
-          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
-          '    <span class="title">title</span>' +
-          '  </a>' +
-          '</div>';
+        var content = `<div class="customoverlay">
+           <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">
+              <span class="title">${context.tour_context.title[i]}</span>
+            </a>
+          </div>`;
 
         // 커스텀 오버레이를 생성합니다
         var customOverlay = new kakao.maps.CustomOverlay({
@@ -471,11 +472,11 @@ Map
           marker = createMarker(stayPositions[i], markerImage);
 
         // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        var content = '<div class="customoverlay">' +
-          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
-          '    <span class="title">title</span>' +
-          '  </a>' +
-          '</div>';
+        var content =`<div class="customoverlay">
+           <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">
+              <span class="title">${context.tour_context.title[i]}</span>
+            </a>
+          </div>`;
 
         // 커스텀 오버레이를 생성합니다
         var customOverlay = new kakao.maps.CustomOverlay({
@@ -515,11 +516,11 @@ Map
           marker = createMarker(shoppingPositions[i], markerImage);
 
         // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        var content = '<div class="customoverlay">' +
-          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
-          '    <span class="title">title</span>' +
-          '  </a>' +
-          '</div>';
+        var content = `<div class="customoverlay">
+           <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">
+              <span class="title">${context.tour_context.title[i]}</span>
+            </a>
+          </div>`;
 
         // 커스텀 오버레이를 생성합니다
         var customOverlay = new kakao.maps.CustomOverlay({
@@ -559,11 +560,11 @@ Map
           marker = createMarker(restaurantPositions[i], markerImage);
 
         // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        var content = '<div class="customoverlay">' +
-          '  <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">' +
-          '    <span class="title">title</span>' +
-          '  </a>' +
-          '</div>';
+        var content = `<div class="customoverlay">
+           <a href="https://api.visitkorea.or.kr/search/commonList.do" target="_blank">
+              <span class="title">${context.tour_context.title[i]}</span>
+            </a>
+          </div>`;
 
         // 커스텀 오버레이를 생성합니다
         var customOverlay = new kakao.maps.CustomOverlay({
