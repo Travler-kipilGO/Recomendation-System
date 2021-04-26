@@ -4,6 +4,12 @@ Log In
 {% endblock page_title %} 
 
 {% block content %} 
+<section class="home" id="home">
+    <div class="video">
+      <video src="{% static 'img/Plane.mp4' %}" loop muted autoplay></video>
+    </div>
+</section>
+
 <form method="post", action="{% url 'core:login' %}"> 
     {% csrf_token %}
     <h3>로그인</h3> 
