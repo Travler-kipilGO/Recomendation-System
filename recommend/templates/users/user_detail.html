@@ -18,6 +18,14 @@
 
         <section>
             <div>
+                <h3>내 취향</h3>
+                <p>
+                {% for theme in themes  %}
+                    <span>{{theme.cat2_name}}</span>
+                {% endfor %}
+                </p>
+            </div>
+            <div>
                 <h3>친구추천</h3>
                 {% for friend in friends %}
                    <a href="{% url 'users:profile' friend.id %}"><p>{{friend.username}}</p></a>

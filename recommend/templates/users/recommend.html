@@ -28,7 +28,6 @@
       <div class="video">
         <video src=" {% static 'img/tree.mp4' %}" loop muted autoplay></video>
       </div>
-
       <div class="card-container">
         <div class="card">
           <span class="discount">-35%</span>
@@ -80,6 +79,10 @@
         </div>
       </div>
     </section>
+
+    {% for recdata in recdatas  %}
+      <span>{{recdata}}</span>
+    {% endfor %}
 
     <script src="js/index.js"></script>
   </body>

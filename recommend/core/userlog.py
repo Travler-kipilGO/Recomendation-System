@@ -59,6 +59,7 @@ def make_train (matrix, percentage = .2):
 
 
 def main(username):
+    print('userlog start')
     userlog_df = init()
     item_lookup = userlog_df[['content_id','content_title']].drop_duplicates()
     item_lookup['content_id'] = item_lookup['content_id']
@@ -98,9 +99,10 @@ def main(username):
     customers_arr = np.array(customers)
     products_arr = np.array(products)
     product_idx = np.argsort(recommend_vector)[::-1][:5]
-    purchaseData = get_items_purchased(username, product_train, customers_arr, products_arr, item_lookup)
+    # purchaseData = get_items_purchased(username, product_train, customers_arr, products_arr, item_lookup)
     recData = rec_items(username, product_train, user_vecs, item_vecs, customers_arr, products_arr, item_lookup, num_items = 10)
-    return purchaseData.values.tolist(), recData.values.tolist()
+    # purchaseData.values.tolist()
+    return recData.values.tolist()
 
 
 def implicit_weighted_ALS(training_set, lambda_val =.1, alpha = 40, n_iter = 10, rank_size = 20, seed = 0):

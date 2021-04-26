@@ -7,8 +7,10 @@ from django.contrib.auth.views import PasswordChangeView
 from . import forms, models
 import core.recommend as recommend
 import core.friend as friend
+import core.userlog as userlog
 from accommodations.models import Accommodation
 from reviews.models import Review
+from travels.models import ClassificationCode
 
 # Create your views here.
 
@@ -69,6 +71,13 @@ class UserProfileView(DetailView):
         #    Accommodation.objects.get(name=recommends[2])
         #)
 
+        surveys = models.Survey.objects.filter(user=user)
+        themes = []
+
+        for survey in surveys:
+            themes.append(ClassificationCode.objects.get(cat2=survey.theme))    
+        context['themes'] = themes
+
         friendList = []
         friends = friend.main(user.username)
         for _, name in friends:
@@ -121,22 +130,29 @@ class SurveyView(View):
     def post(self,request):
         return render(request, 'users/recommend.html')
 
-def recommend(request) :
-    print('request recommend ~')
+class RecommendView(View):
+    def get(self, request):
+        username = request.user.username
+        context = {}  
+        recdata_list = []
+        if username != '' and username != 'admin':
+            recDatas = userlog.main(username)
+            for recdata in recDatas:
 
-    id2 = request.POST['answer_0']
-    theme = request.POST.getlist('answer[]')
-    print('param ', id2, theme)
+                recdata_list.append(recdata[1])
+            
+            context['recdatas'] = recdata_list
+            print(recdata_list)
+        return render(request, 'users/recommend.html', context)
 
-    #surveys = Survey(theme=theme, Mail=id2)
-    #surveys.save()
+    def post(self,request):
+        themes = request.POST.getlist('answer[]')
+        for theme in themes:
+            surveys = models.Survey(theme=theme, user=request.user)
+            surveys.save()
+        return render(request, 'users/recommend.html')    
 
-    return render(request, 'users/recommend.html')
+    
 
 def search(request) :
     return render(request, 'users/search.html')
-
-def data(request) :
-    print('request data')
-    surveys = Survey.objects.all()
-    return render(request, 'mypage.html', {'surveys' : surveys})
