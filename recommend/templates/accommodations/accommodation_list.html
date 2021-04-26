@@ -6,6 +6,18 @@
 
 {% block content %}
 <div class="container">
+            
+    <div>
+        <h4>추천</h4>
+        {% for accommodation in recommends %}
+        <div>
+            <a href="{% url 'accommodations:detail' accommodation.pk %}">
+                <img src='{{accommodation.main_img_src}}'>
+            </a>
+            <p>{{accommodation.name}}</p>
+        </div>
+        {% endfor %}
+    </div>
     <div>
         {% for accommodation in accommodations  %}
         <a href="{% url 'accommodations:detail' accommodation.pk %}">

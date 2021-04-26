@@ -33,18 +33,15 @@
                 {% endfor %}
             </div>
         </section>
-        
-        <div>
-            <h4>추천</h4>
-            {% for accommodation in recommends %}
+        <section>
             <div>
-                <a href="{% url 'accommodations:detail' accommodation.pk %}">
-                    <img src='{{accommodation.main_img_src}}'>
-                </a>
-                <p>{{accommodation.name}}</p>
+                <h3>여행지 추천</h3>
+                {% for recdata in recdatas  %}
+                <span>{{recdata}}</span>
+              {% endfor %}
             </div>
-            {% endfor %}
-        </div>
+        </section>
+      
         <div>
             <h4>리뷰</h4>
             {% for review in reviews %}

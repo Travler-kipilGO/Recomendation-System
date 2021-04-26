@@ -6,7 +6,7 @@
 {% block content %}
 <section id="survey">
     <div class="wrapper">
-        <form id="form" action="{% url 'users:recommend' %}" method="post">
+        <form id="form" action="{% url 'users:survey' %}" method="post">
             {% csrf_token %}
 
             <div class="test">

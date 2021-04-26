@@ -5,7 +5,6 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.views import PasswordChangeView
 from . import forms, models
-import core.recommend as recommend
 import core.friend as friend
 import core.userlog as userlog
 from accommodations.models import Accommodation
@@ -36,11 +35,12 @@ class LoginView(FormView):
         if next_arg is not None:
             return next_arg
         else:
-            return reverse("core:home")
+            print(self.request.user.id)
+            return reverse_lazy("users:profile", kwargs={'pk': self.request.user.id})
 
 def log_out(request): 
     logout(request) 
-    return redirect(reverse("core:home"))
+    return redirect(reverse("core:login"))
 
 
 class SignupView(FormView):
@@ -64,13 +64,7 @@ class UserProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
         user = models.User.objects.get(pk=self.kwargs['pk'])
-        #recommends = recommend.get_k_neighbors(user.username, 3)
-        #context['recommends'] = (
-        #    Accommodation.objects.get(name=recommends[0]),
-        #    Accommodation.objects.get(name=recommends[1]),
-        #    Accommodation.objects.get(name=recommends[2])
-        #)
-
+        
         surveys = models.Survey.objects.filter(user=user)
         themes = []
 
@@ -81,12 +75,22 @@ class UserProfileView(DetailView):
         friendList = []
         friends = friend.main(user.username)
         for _, name in friends:
-            print(name)
             friendList.append(models.User.objects.get(username=name))
-            
-        #print(friends[0][1])
+
         context['friends'] = friendList
         context['reviews'] = Review.objects.filter(user=user)
+
+        username = user.username
+        recdata_list = []
+        try:
+            if username != '' and username != 'admin':
+                recDatas = userlog.main(username)
+                for recdata in recDatas:
+                    recdata_list.append(recdata[1])
+            
+                context['recdatas'] = recdata_list        
+        except:
+            context['recdatas'] = ['no recommend']
         return context
 
 
@@ -127,32 +131,10 @@ class SurveyView(View):
     def get(self, request):
         return render(request, 'users/survey.html')
 
-    def post(self,request):
-        return render(request, 'users/recommend.html')
-
-class RecommendView(View):
-    def get(self, request):
-        username = request.user.username
-        context = {}  
-        recdata_list = []
-        if username != '' and username != 'admin':
-            recDatas = userlog.main(username)
-            for recdata in recDatas:
-
-                recdata_list.append(recdata[1])
-            
-            context['recdatas'] = recdata_list
-            print(recdata_list)
-        return render(request, 'users/recommend.html', context)
-
-    def post(self,request):
+    def post(self, request):
         themes = request.POST.getlist('answer[]')
         for theme in themes:
             surveys = models.Survey(theme=theme, user=request.user)
             surveys.save()
-        return render(request, 'users/recommend.html')    
 
-    
-
-def search(request) :
-    return render(request, 'users/search.html')
+        return redirect(reverse("users:profile", kwargs={'pk': request.user.id}))

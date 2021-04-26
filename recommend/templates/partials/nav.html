@@ -1,9 +1,9 @@
 <a href="#" class="logo">travel <span>.</span></a>
 <nav class="navbar">
     <ul>
-        <li><a data-scroll="home" href="#home" class="active">홈</a></li>
-          <li><a data-scroll="search" href="#search">검색</a></li>
-          <li><a data-scroll="mypage" href="#mypage">마이페이지</a></li>
+          <li><a data-scroll="search" href="{% url 'travels:home' %}">검색</a></li>
+          <li><a data-scroll="search" href="{% url 'accommodations:home' %}">숙박</a></li>
+          <li><a data-scroll="mypage" href="{% url 'users:profile' user.id %}">마이페이지</a></li>
     </ul>
 </nav>
 <div class="fas fa-bars"></div>

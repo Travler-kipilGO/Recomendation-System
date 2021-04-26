@@ -4,7 +4,7 @@ Log In
 {% endblock page_title %} 
 
 {% block content %} 
-<form method="post", action="{% url 'users:login' %}"> 
+<form method="post", action="{% url 'core:login' %}"> 
     {% csrf_token %}
     <h3>로그인</h3> 
     {{form.as_p}} 
