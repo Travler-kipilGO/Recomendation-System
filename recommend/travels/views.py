@@ -2,6 +2,7 @@ from django.shortcuts import render
 import requests
 import json
 from . import models
+import core.travel as travel
 
 # Create your views here.
 
@@ -70,13 +71,15 @@ def n_map(request):
     # 테마별 좌표 리스트
     # 로그인 된 유저 ID필요
     # user_id = User.object.get('user_id')
-    tour_context       = search_data(12, areacode)
-    culture_context    = search_data(14, areacode)
-    festival_context   = search_data(15, areacode)
-    leports_context    = search_data(28, areacode)
-    stay_context       = search_data(32, areacode)
-    shopping_context   = search_data(38, areacode)
-    restaurant_context = search_data(39, areacode)
+    username = None
+    username = request.user.username
+    tour_context       = search_data(username, 12, areacode)
+    culture_context    = search_data(username, 14, areacode)
+    festival_context   = search_data(username, 15, areacode)
+    leports_context    = search_data(username, 28, areacode)
+    stay_context       = search_data(username, 32, areacode)
+    shopping_context   = search_data(username, 38, areacode)
+    restaurant_context = search_data(username, 39, areacode)
 
     context = {}
     context['tour_context']       = tour_context
@@ -97,7 +100,7 @@ def n_map(request):
     return render(request, 'travels/n_map.html', {'context': context_json} )
 
 
-def search_data(c_type, loc):
+def search_data(username, c_type, loc):
     # dataset = get_api_data(1000)
     
     # 여행지 불러오기
@@ -117,6 +120,10 @@ def search_data(c_type, loc):
     context['title'] = title_li[:5]
     context['mapx']  = x_li[:5]
     context['mapy']  = y_li[:5]
-    # context['reco_list'] = li
-
+    try:
+        if username != None:
+            context['reco_list'] = travel.reco_data(username, c_type, loc)
+    except:
+        pass
+    
     return context

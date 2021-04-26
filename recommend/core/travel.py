@@ -8,27 +8,27 @@ def reco_data(username, c_type, loc):
     # 여행지 평가 불러오기
     data_r = pd.DataFrame(
         [
-            [travelRating.user.username, travelRating.mytripdata.travelspot.content_type, travelRating.rating]
+            [travelRating.user.username, travelRating.mytripdata.travelspot.content_id, travelRating.mytripdata.travelspot.content_type, travelRating.rating]
             for travelRating in TravelRating.objects.filter(mytripdata__travelspot__content_type=c_type, mytripdata__travelspot__areacode=loc)
             
         ],
-        columns=['user_id', 'content_id', 'rating'])
+        columns=['user_id', 'content_id', 'content_type', 'rating'])
+    data_r[['content_id', 'content_type']] = data_r[['content_id', 'content_type']].astype(int)
+    data_r[['rating']] = data_r[['rating']].astype(float)
 
-    print(data)
-    print(data_r)
     # 현재 로그인 된 유저 아이디 받기
     user = username
 
     # 메트릭스 만들기
     matrix = pd.pivot_table(data_r, index="user_id", columns="content_id", values='rating')
     matrix.fillna(-1, inplace=True)
-    
+
     # 추천 받기
     li = []
     for rate, c_id in recommendation(matrix, user):
-        li.append((rate, data.loc[ data['content_type'] == c_id, 'title' ].values[0]))
+        li.append((rate, data.loc[ data['content_id'] == c_id, 'title' ].values[0]))
     reco_li = li[:5]
-
+ 
     # title 기반으로 좌표값 불러오기
     t_li = []
     x_li = []
