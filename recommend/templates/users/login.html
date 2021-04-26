@@ -6,18 +6,21 @@ Log In
 {% block content %} 
 {% load static %}
 <section class="home" id="home">
+    <div>
     <div class="video">
       <video src="{% static 'img/Plane.mp4' %}" loop muted autoplay></video>
     </div>
-</section>
-
+<div class="form-container">
 <form method="post", action="{% url 'core:login' %}"> 
     {% csrf_token %}
     <h3>로그인</h3> 
     {{form.as_p}} 
     <div class="intro-button">
-        <button>로그인</button>
-        <a class="btn btn-primary" href="{% url 'users:signup' %}" >회원가입</a>
+        <button class="button">로그인</button>
+        <a href="{% url 'users:signup' %}" class="button">회원가입</a>
     </div>
-</form> 
+</form>
+</div>
+</section>
+</div
 {% endblock content %}

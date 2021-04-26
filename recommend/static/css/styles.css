@@ -1,7 +1,21 @@
 @import url("https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap");
 
+@font-face {
+  font-family: 'GmarketSansBold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'NEXON Lv1 Gothic OTF';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
-  font-family: "Kalam", cursive;
+  font-family: "NEXON Lv1 Gothic OTF";
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -95,22 +109,6 @@ header .fa-bars {
   z-index: -1;
 }
 
-.home .content {
-  margin-top: 7rem;
-}
-.home .content h1 {
-  font-size: 6.1vw;
-  color: #fff;
-  text-shadow: 0 0.3rem 0.5rem #000;
-}
-.home .content p {
-  font-size: 1.5vw;
-  color: #eee;
-  text-shadow: 0 0.3rem 0.5rem #000;
-  padding-left: 2rem;
-  border-left: 0.3rem solid #ddd;
-}
-
 .home .form-container form {
   margin-top: 8rem;
   padding: 2rem;
@@ -127,11 +125,20 @@ header .fa-bars {
 }
 .home .form-container form span {
   color: #0098a1;
-  font-size: 2.5rem;
-  margin: 0.5rem 0;
-  display: block;
+  font-size: 1.5rem;
+  margin: 0.5rem 0.1rem;
+  padding: 0.2rem 0.2rem;
+  display: inline-block;
 }
-.home .form-container form input {
+
+.home .form-container form p label {
+  color: #0098a1;
+  font-size: 2.0rem;
+  margin: 0.5rem 0;
+  padding-top: 0.2rem 0;
+}
+
+.home .form-container form p input {
   width: 100%;
   padding: 0 1rem;
   height: 4rem;
@@ -142,9 +149,24 @@ header .fa-bars {
   color: #333;
   box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.3) inset;
   border-radius: 0.3rem;
+  margin-bottom: 0.1rem 0;
+}
+.home .form-container form select {
+  color: #0098a1;
+  font-size: 2.0rem;
+  margin: 0.5rem 0;
+  padding-top: 0.2rem 0;
+}
+.home .form-container form select option {
+  color: #0098a1;
+  font-size: 1.5rem;
 }
 
-.home .form-container form input[type="submit"] {
+.home .form-container form p {
+  padding: 0.4rem 0;
+  margin: 0.2rem 0;
+}
+.home .form-container form .button {
   width: 10rem;
   color: #fff;
   background: #0098a1;
@@ -152,9 +174,13 @@ header .fa-bars {
   font-size: 2rem;
   margin-top: 2rem;
   transition: 0.2s linear;
+  border: none;
+  text-align: center;
 }
-
-.home .form-container form input[type="submit"]:hover {
+.home .form-container form a {
+  display: inline-block;
+}
+.home .form-container form .button:hover {
   border: 0.2rem solid #0098a1;
   color: #0098a1;
   background: none;

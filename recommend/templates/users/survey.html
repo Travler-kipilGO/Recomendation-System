@@ -4,6 +4,9 @@
 {% endblock page_title %} 
 
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
 <section id="survey">
     <div class="wrapper">
         <form id="form" action="{% url 'users:survey' %}" method="post">

@@ -4,9 +4,19 @@ Sign Up
 {% endblock page_title %} 
 
 {% block content %} 
-<form method="post", action="{% url 'users:signup' %}"> 
-  {% csrf_token %} 
-  {{form.as_p}} 
-  <button>Sign Up</button> 
-</form> 
+{% load static %}
+<section class="home" id="home">
+  <div>
+  <div class="video">
+    <video src="{% static 'img/Plane.mp4' %}" loop muted autoplay></video>
+  </div>
+  <div class="form-container">
+  <form method="post", action="{% url 'users:signup' %}"> 
+    {% csrf_token %}
+    <h3>회원가입</h3> 
+    {{form.as_p}} 
+  <button class='button'>Sign Up</button> 
+</form>
+</div>
+</section>
 {% endblock content %}

@@ -5,23 +5,31 @@
 {% endblock page_title %}
 
 {% block content %}
-<div class="container">
-            
-    <div>
-        <h4>추천</h4>
-        {% for accommodation in recommends %}
-        <div>
-            <a href="{% url 'accommodations:detail' accommodation.pk %}">
-                <img src='{{accommodation.main_img_src}}'>
-            </a>
-            <p>{{accommodation.name}}</p>
-        </div>
-        {% endfor %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/recommend.css' %}" />
+<section class="home" id="home">
+
+    <div class="video">
+      <video src="{% static 'img/tree.mp4' %}" loop muted autoplay></video>
     </div>
     <div>
+        
+        <div class="card-container">
+        {% for accommodation in recommends %}
+        <div class="card">
+                <a href="{% url 'accommodations:detail' accommodation.pk %}">
+                <img src='{{accommodation.main_img_src}}'>        
+            <p>{{accommodation.name}}</p>
+        </div>    
+        {% endfor %}
+        </div>
+    </div>
+</section>
+    <div class="card-container">
         {% for accommodation in accommodations  %}
+        <div class="card">
         <a href="{% url 'accommodations:detail' accommodation.pk %}">
-            <img src="{{accommodation.first_photo}}">
+            <img src="{{accommodation.main_img_src}}">
             <div>
                 <div>
                     <span>{{accommodation.city}}, {{accommodation.country.name}}</span>
@@ -32,8 +40,10 @@
             </div>
             <span>{{accommodation.name}}</span>
         </a>
+        </div>
         {% endfor %}
     </div>
+
     <div>
         {% if page_obj.has_previous %}
         <a href="?page={{page_obj.previous_page_number}}" class="text-teal-500">
@@ -52,4 +62,5 @@
         {% endif %}
     </div>
 </div>
+</section>
 {% endblock content %}
