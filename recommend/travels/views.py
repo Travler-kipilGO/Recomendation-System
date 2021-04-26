@@ -102,28 +102,27 @@ def n_map(request):
 
 def search_data(username, c_type, loc):
     # dataset = get_api_data(1000)
-    
-    # 여행지 불러오기
-    data = models.TravelSpot.objects.all()
-    # 여행지 평가 불러오기
 
-    context  = {}
-    title_li = []
-    x_li     = []
-    y_li     = []
-    for i in range(0, len(data)):
-        if (data[i].content_type == int(c_type)) & (data[i].areacode == int(loc)):    
-            title_li.append(data[i].title)
-            x_li.append(data[i].mapx)
-            y_li.append(data[i].mapy)
-
-    context['title'] = title_li[:5]
-    context['mapx']  = x_li[:5]
-    context['mapy']  = y_li[:5]
+    context = {}
     try:
         if username != None:
-            context['reco_list'] = travel.reco_data(username, c_type, loc)
+            return travel.reco_data(username, c_type, loc)
     except:
-        pass
+        print('search')
+        # 여행지 불러오기
+        data = models.TravelSpot.objects.all()
+        # 여행지 평가 불러오기
+        title_li = []
+        x_li     = []
+        y_li     = []
+        for i in range(0, len(data)):
+            if (data[i].content_type == int(c_type)) & (data[i].areacode == int(loc)):    
+                title_li.append(data[i].title)
+                x_li.append(data[i].mapx)
+                y_li.append(data[i].mapy)
+
+        context['title'] = title_li[:5]
+        context['mapx']  = x_li[:5]
+        context['mapy']  = y_li[:5]
     
     return context

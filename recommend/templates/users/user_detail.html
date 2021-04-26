@@ -20,7 +20,8 @@
             <div>
                 <h3>친구추천</h3>
                 {% for friend in friends %}
-                    <p>{{friend.1}}</p>
+                   <a href="{% url 'users:profile' friend.id %}"><p>{{friend.username}}</p></a>
+
                 {% endfor %}
             </div>
         </section>

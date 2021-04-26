@@ -43,7 +43,7 @@ def reco_data(username, c_type, loc):
     context['title'] = t_li
     context['mapx']  = x_li
     context['mapy']  = y_li
-
+    print('recommend')
     return context
 
 # kdd 유사도 함수

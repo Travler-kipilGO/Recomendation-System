@@ -69,9 +69,14 @@ class UserProfileView(DetailView):
         #    Accommodation.objects.get(name=recommends[2])
         #)
 
+        friendList = []
         friends = friend.main(user.username)
+        for _, name in friends:
+            print(name)
+            friendList.append(models.User.objects.get(username=name))
+            
         #print(friends[0][1])
-        context['friends'] = friends
+        context['friends'] = friendList
         context['reviews'] = Review.objects.filter(user=user)
         return context
 
