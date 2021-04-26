@@ -6,50 +6,63 @@
 {% endblock page_title %}
 
 {% block content %}
-<div>
-    <div>
-        <div>
-            <h4>사용자 정보</h4>
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/userdetail.css' %}" />
+<section class="home" id="home">
+    <div class="video">
+        <video src="{% static 'img/tree.mp4' %}" loop muted autoplay></video>
+    </div>
+
+<div class='user-info'>
+<div class='form-container'>
+    <div class="section">
+            <h3>사용자 정보</h3>
             <p>이름 : <span>{{user_obj.first_name}}</span></p>
             {% if user == user_obj %}
                 <a href="{% url 'users:update' %}">Edit Profile</a>
             {% endif %}
-        </div>
-
-        <section>
-            <div>
-                <h3>내 취향</h3>
-                <p>
-                {% for theme in themes  %}
-                    <span>{{theme.cat2_name}}</span>
-                {% endfor %}
-                </p>
-            </div>
-            <div>
-                <h3>친구추천</h3>
-                {% for friend in friends %}
-                   <a href="{% url 'users:profile' friend.id %}"><p>{{friend.username}}</p></a>
-
-                {% endfor %}
-            </div>
-        </section>
-        <section>
-            <div>
-                <h3>여행지 추천</h3>
-                {% for recdata in recdatas  %}
-                <span>{{recdata}}</span>
-              {% endfor %}
-            </div>
-        </section>
-      
-        <div>
-            <h4>리뷰</h4>
-            {% for review in reviews %}
-                <a href="{% url 'accommodations:detail' review.accommodation.pk %}">
-                    <span>{{review.accommodation.name}}</span>{{review.review}} <span>{{review.rating_average}}</span></p>
-                </a>
-            {% endfor %}
-        </div>
     </div>
 </div>
+<div class='form-container'>
+    <div class="section">
+        <h3>내 취향</h3>
+        <p>
+        {% for theme in themes  %}
+            <span>{{theme.cat2_name}}</span>
+        {% endfor %}
+        </p>
+    </div>
+</div>
+</div>
+<div class='user-info'>
+<div class='form-container'>
+    <div class="section">
+        <h3>친구추천</h3>
+        {% for friend in friends %}
+           <a href="{% url 'users:profile' friend.id %}"><p>{{friend.username}}</p></a>
+        {% endfor %}
+    </div>
+</div>
+<div class='form-container'>
+        <div class="section">
+                <h3>여행지 추천</h3>
+                {% for recdata in recdatas  %}
+                    <p>{{recdata}}</p>
+                {% endfor %}
+            </div>
+        </div>
+</div>
+        <div class='form-container'>
+            <div class="section"> 
+                <h3>리뷰</h3>
+                {% for review in reviews %}
+                    <a href="{% url 'accommodations:detail' review.accommodation.pk %}">
+                        <span>{{review.accommodation.name}}</span>{{review.review}} <span>{{review.rating_average}}</span></p>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+</section>
+
 {% endblock content %}
